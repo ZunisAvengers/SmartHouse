@@ -1,0 +1,7 @@
+{
+    "login": "user-name",
+    "role": "user-role",
+    "password": "12345",
+    "fullname": "Sam Smit",
+    "token":"my_token"
+}
