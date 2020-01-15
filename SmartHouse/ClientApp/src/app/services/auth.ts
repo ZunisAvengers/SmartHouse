@@ -20,32 +20,24 @@ export class AuthenticationService {
     public get getUser(): User {
         return this.User
     }
-    public login(login: string, password: string){
+    public login(login: string, password: string): boolean{        
         try{
-            this.http.post('/api/login', {login: login, password: password}).subscribe((data:any) => {
+            this.http.post('/api/user/Login', {login: login, password: password}).subscribe((data:any) => {
                 this.User = data as User;
                 localStorage.setItem('token', data.token)
+                return true
             })
         }
         catch(error){
             console.log(error);
         }
-    }
-    public defaultLogin(login: string, password: string){
-        try{
-            this.http.get('defaultUser.json').subscribe((data:any) => {
-                this.User = data as User;
-                localStorage.setItem('token', data.token)
-            })
-        }catch(error){
-            console.log(error)
-        }
+        return false
     }
     public logout (){
         this.User = initialState;
         localStorage.removeItem('token')
     }
-    public authToken(){
+    public authWithToken(){
         if (localStorage.getItem('token') !== undefined){
             this.http.get('/api/authToken').subscribe((data:any) => {
                 this.User = data as User;

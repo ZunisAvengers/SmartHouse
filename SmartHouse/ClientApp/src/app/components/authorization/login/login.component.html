@@ -1,23 +1,27 @@
-<div class="col-sm-5 d-flex justify-content-center">
-  <form class="form-horizontal" [formGroup]="loginForm" >
-    <h2 >Войти</h2>
+<div class="col-sm-5 justify-content-center">
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit(loginForm.value)" >
     <div class="form-group">
-      <label class="control-label col-sm-2" for="login">Login:</label>
-      <div class="col-sm-10">
-        <input type="text" class="form-control" formControlName="login" placeholder="Введите ваш логин" name="login">
-      </div>
+      <label for="login">Login: </label>
+      <input type="text" class="form-control" formControlName="login" >
+      <ul *ngIf="f.login.errors && submited" class="text-danger">
+        <li *ngIf="f.login.errors.required">Обязательное поле</li>
+        <li *ngIf="f.login.errors.minlength">Логин должен быть не меньше 5 символов</li>
+        <li *ngIf="f.login.errors.maxlength">Логин должен быть не больше 10 символов </li>
+      </ul>
     </div>
     <div class="form-group">
-      <label class="control-label col-sm-2" for="password">Password:</label>
-      <div class="col-sm-10">          
-        <input type="password" class="form-control" formControlName="password"  placeholder="Введите ваш пароль" name="password">
-      </div>
+      <label for="password">Password: </label>
+      <input type="text" class="form-control" formControlName="password" >
+      <ul *ngIf="f.password.errors && submited" class="text-danger">
+        <li *ngIf="f.password.errors.required">Обязательное поле</li>
+        <li *ngIf="f.password.errors.minlength">Пароль должен быть не меньше 5 символов</li>
+        <li *ngIf="f.password.errors.maxlength">Пароль должен быть не больше 10 символов </li>
+      </ul>
     </div>
-    
     <div class="form-group">
-      <div class="col-sm-offset-2 col-sm-10">
-        <button type="submit" (click)="onSubmit()" class="btn">Войти</button>
-      </div>
-    </div>
+      <p>{{errorMessage}}</p>
+      <p *ngIf="loading">Загруска...</p>
+      <input type="submit" class="btn btn-primary" value="Submit">
+    </div>    
   </form>
 </div>

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthenticationService } from './../../../services/auth'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -7,29 +8,38 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   templateUrl: './login.component.html',
 })
 export class LoginComponent implements OnInit {
-  errorMessages: string[];
+  loading: boolean;
+  submited: boolean;
+  errorMessage:string;
   loginForm: FormGroup;
 
   constructor(
     private auth: AuthenticationService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private router: Router
     ) { }
-  
-  get f() { return this.loginForm.controls; }
-
+    
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
-      login: ['', [Validators.required, Validators.maxLength(10), Validators.minLength(4)]],
-      password: ['', [Validators.required, Validators.maxLength(10), Validators.minLength(4)]]
-    })
+      login: ['',[Validators.minLength(5), Validators.maxLength(10), Validators.required]],
+      password: ['',[Validators.minLength(5), Validators.maxLength(10), Validators.required]]
+    })      
+    this.submited = false
+    this.loading = false
+    this.errorMessage = ''
   }
 
-  public onSubmit(){
-    
-    try{
-      this.auth.login(this.f.login.value, this.f.password.value)
-    }catch{
+  get f(){return this.loginForm.controls}
       
-    }    
+  onSubmit(value: any){
+    this.submited = true
+    if(this.loading = this.loginForm.valid){        
+      if(this.loading = this.submited = this.auth.login(value.login, value.password)){
+        this.router.navigate([''])
+      }
+      else {
+        this.errorMessage = 'Логин или Пароль введены неверно'           
+      }
+    }
   }
 }
