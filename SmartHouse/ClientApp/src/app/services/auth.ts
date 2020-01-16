@@ -10,19 +10,21 @@ const initialState: User = {
 
 @Injectable()
 export class AuthenticationService {
-    private User: User;
-    constructor(private http: HttpClient){
-        this.User = initialState;
-    }
+    private User: User = initialState;
+
+    constructor(private http: HttpClient) { }
+
     public get isAuthorization(): boolean{
         return this.User !== initialState;
     }
+
     public get getUser(): User {
-        return this.User
+        return this.isAuthorization ? this.User : null
     }
+
     public login(login: string, password: string): boolean{        
         try{
-            this.http.post('/api/user/Login', {login: login, password: password}).subscribe((data:any) => {
+            this.http.post('/user/Login', {login: login, password: password}).subscribe((data:any) => {
                 this.User = data as User;
                 localStorage.setItem('token', data.token)
                 return true
@@ -33,13 +35,15 @@ export class AuthenticationService {
         }
         return false
     }
+
     public logout (){
         this.User = initialState;
         localStorage.removeItem('token')
     }
+    
     public authWithToken(){
         if (localStorage.getItem('token') !== undefined){
-            this.http.get('/api/authToken').subscribe((data:any) => {
+            this.http.get('/user/authToken').subscribe((data:any) => {
                 this.User = data as User;
             })
         }
