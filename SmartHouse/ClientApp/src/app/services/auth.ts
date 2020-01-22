@@ -40,11 +40,12 @@ export class AuthenticationService {
         this.User = initialState;
         localStorage.removeItem('token')
     }
-    
+
     public authWithToken(){
         if (localStorage.getItem('token') !== undefined){
             this.http.get('/user/authToken').subscribe((data:any) => {
                 this.User = data as User;
+                localStorage.setItem('token', data.token);
             })
         }
     }
